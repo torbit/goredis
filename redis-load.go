@@ -13,7 +13,7 @@ func load_db(port int, db int, reader *bufio.Reader) {
         addr = "127.0.0.1:" + strconv.Itoa(port)
     }
 
-    c, err := net.Dial("tcp", "", addr)
+    c, err := net.Dial("tcp", addr)
 
     if err != nil {
         println(err.String())
