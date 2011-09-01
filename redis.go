@@ -187,22 +187,25 @@ func (client *Client) sendCommand(cmd string, args ...string) (data interface{},
     // grab a connection from the pool
     c, err := client.popCon()
 
+    var b []byte
     if err != nil {
-        goto End
+        //add the client back to the queue
+        client.pushCon(c)
+        return data, err
     }
 
-    b := commandBytes(cmd, args...)
+    b = commandBytes(cmd, args...)
     data, err = client.rawSend(c, b)
     if err == os.EOF || err == os.EPIPE {
         c, err = client.openConnection()
         if err != nil {
-            goto End
+            //add the client back to the queue
+            client.pushCon(c)
+            return data, err
         }
 
         data, err = client.rawSend(c, b)
     }
-
-End:
 
     //add the client back to the queue
     client.pushCon(c)
@@ -213,12 +216,17 @@ End:
 func (client *Client) sendCommands(cmdArgs <-chan []string, data chan<- interface{}) (err os.Error) {
     // grab a connection from the pool
     c, err := client.popCon()
+    var reader *bufio.Reader
 
     if err != nil {
-        goto End
+        // Close client and synchronization issues are a nightmare to solve.
+        c.Close()
+        // Push nil back onto queue
+        client.pushCon(nil)
+        return err
     }
 
-    reader := bufio.NewReader(c)
+    reader = bufio.NewReader(c)
 
     // Ping first to verify connection is open
     err = writeRequest(c, "PING")
@@ -228,7 +236,11 @@ func (client *Client) sendCommands(cmdArgs <-chan []string, data chan<- interfac
         // Looks like we have to open a new connection
         c, err = client.openConnection()
         if err != nil {
-            goto End
+            // Close client and synchronization issues are a nightmare to solve.
+            c.Close()
+            // Push nil back onto queue
+            client.pushCon(nil)
+            return err
         }
         reader = bufio.NewReader(c)
     } else {
@@ -238,7 +250,11 @@ func (client *Client) sendCommands(cmdArgs <-chan []string, data chan<- interfac
             return RedisError("Unexpected response to PING.")
         }
         if err != nil {
-            goto End
+            // Close client and synchronization issues are a nightmare to solve.
+            c.Close()
+            // Push nil back onto queue
+            client.pushCon(nil)
+            return err
         }
     }
 
@@ -271,8 +287,6 @@ func (client *Client) sendCommands(cmdArgs <-chan []string, data chan<- interfac
     for e := range errs {
         err = e
     }
-
-End:
 
     // Close client and synchronization issues are a nightmare to solve.
     c.Close()
