@@ -14,6 +14,8 @@ Some features include:
 
 This library is stable and is used in production environments. However, some commands have not been tested as thoroughly as others. If you find any bugs please file an issue!
 
+*NOTE:* This is a modified version of [redis.go](https://github.com/hoisie/redis.go) by [hoise](https://github.com/hoisie) to support the latest version of go.
+
 ## Examples
 
 Most of the examples connect to a redis database running in the default port -- 6367. 
