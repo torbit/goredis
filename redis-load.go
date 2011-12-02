@@ -1,6 +1,9 @@
 package main
 
-import "bufio"
+import (
+	"bufio"
+	"io"
+)
 import "fmt"
 import "net"
 import "os"
@@ -16,7 +19,7 @@ func load_db(port int, db int, reader *bufio.Reader) {
 	c, err := net.Dial("tcp", addr)
 
 	if err != nil {
-		println(err.String())
+		println(err.Error())
 		return
 	}
 
@@ -26,7 +29,7 @@ func load_db(port int, db int, reader *bufio.Reader) {
 
 	for {
 		line, err := reader.ReadBytes('\n')
-		if err == os.EOF {
+		if err == io.EOF {
 			break
 		}
 		println(string(line))
@@ -48,7 +51,7 @@ func usage() { println("redis-load [-p port] [-db num]") }
 
 func main() {
 
-	var err os.Error
+	var err error
 
 	db := 0
 	port := 6379
@@ -59,14 +62,14 @@ func main() {
 		arg := args[i]
 		if arg == "-p" && i < len(args)-1 {
 			if port, err = strconv.Atoi(args[i+1]); err != nil {
-				println(err.String())
+				println(err.Error())
 				return
 			}
 			i += 1
 			continue
 		} else if arg == "-db" && i < len(args)-1 {
 			if db, err = strconv.Atoi(args[i+1]); err != nil {
-				println(err.String())
+				println(err.Error())
 				return
 			}
 			i += 1
