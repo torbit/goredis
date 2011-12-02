@@ -1104,7 +1104,7 @@ func containerToString(val reflect.Value, args []string) ([]string, error) {
 }
 
 func (client *Client) Hmset(key string, mapping interface{}) error {
-    args := make([]string, 5)
+    args := make([]string, 0, 5)
     args = append(args, key)
 
 	args, err := containerToString(reflect.ValueOf(mapping), args)
