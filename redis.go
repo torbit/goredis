@@ -1389,3 +1389,11 @@ func (client *Client) Bgrewriteaof() error {
     }
     return nil
 }
+
+func (client *Client) Ping() (string, error) {
+	res, err := client.sendCommand("PING")
+	if err != nil {
+		return "", err
+	}
+	return res.(string), nil
+}
