@@ -24,7 +24,7 @@ func dump_db(port int, db int, output io.Writer) {
     keys, err := client.Keys("*")
 
     if err != nil {
-        println("Redis-dump failed", err.String())
+        println("Redis-dump failed", err.Error())
         return
     }
 
@@ -54,7 +54,7 @@ func usage() { println("redis-dump [-p port] [-db num]") }
 
 func main() {
 
-    var err os.Error
+    var err error
 
     db := 0
     port := 6379
@@ -65,14 +65,14 @@ func main() {
         arg := args[i]
         if arg == "-p" && i < len(args)-1 {
             if port, err = strconv.Atoi(args[i+1]); err != nil {
-                println(err.String())
+                println(err.Error())
                 return
             }
             i += 1
             continue
         } else if arg == "-db" && i < len(args)-1 {
             if db, err = strconv.Atoi(args[i+1]); err != nil {
-                println(err.String())
+                println(err.Error())
                 return
             }
             i += 1
