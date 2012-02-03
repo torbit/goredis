@@ -142,6 +142,7 @@ func readResponse(reader *bufio.Reader) (interface{}, error) {
     return readBulk(reader, line)
 }
 
+// TODO: client is not needed here
 func (client *Client) rawSend(c net.Conn, cmd []byte) (interface{}, error) {
     _, err := c.Write(cmd)
     if err != nil {
@@ -1396,4 +1397,50 @@ func (client *Client) Ping() (string, error) {
 		return "", err
 	}
 	return res.(string), nil
+}
+
+type Transaction struct {
+    c   net.Conn
+    *Client
+}
+
+func (client *Client) Transaction() (*Transaction, error) {
+    c, err := client.openConnection()
+    if err != nil {
+        return nil, err
+    }
+    return &Transaction{c, client}, nil
+}
+
+func (t *Transaction) sendCommand(cmd string, args ...string) (data interface{}, err error) {
+    b := commandBytes(cmd, args...)
+    return t.Client.rawSend(t.c, b)
+}
+
+func (t *Transaction) Watch(keys []string) error {
+    _, err := t.sendCommand("WATCH", keys...)
+    return err
+}
+
+func (t *Transaction) Unwatch() error {
+    _, err := t.sendCommand("UNWATCH")
+    return err
+}
+
+func (t *Transaction) Multi() error {
+    _, err := t.sendCommand("MULTI")
+    return err
+}
+
+func (t *Transaction) Discard() error {
+    _, err := t.sendCommand("DISCARD")
+    return err
+}
+
+func (t *Transaction) Exec() ([][]byte, error) {
+    res, err := t.sendCommand("EXEC")
+    if err != nil {
+        return nil, err
+    }
+    return res.([][]byte), nil
 }
