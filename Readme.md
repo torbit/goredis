@@ -1,6 +1,9 @@
-## redis.go
+## goredis
 
 *NOTE:* This is a modified version of [redis.go](https://github.com/hoisie/redis.go) by [hoise](https://github.com/hoisie) to support the latest version of go.
+
+*NOTE:* This project used to be called as redis.go. It is now changed to *goredis* because of [this](https://groups.google.com/forum/?fromgroups#!topic/golang-nuts/dnOK9j5Fvn4). (In short, we can no longer use package names end in .go.)
+
 Right now, it is Go1-ready.
 
 redis.go is a client for the [redis](http://github.com/antirez/redis) key-value store. 
@@ -16,6 +19,10 @@ Some features include:
 * Marshaling/Unmarshaling go types to hashes
 
 This library is stable and is used in production environments. However, some commands have not been tested as thoroughly as others. If you find any bugs please file an issue!
+
+## Install
+
+  go get github.com/monnand/goredis
 
 ## Examples
 
