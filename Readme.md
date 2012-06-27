@@ -2,11 +2,11 @@
 
 **NOTE:** This is a modified version of [redis.go](https://github.com/hoisie/redis.go) by [hoise](https://github.com/hoisie) to support the latest version of go.
 
-*NOTE:* This project used to be called as redis.go. It is now changed to *goredis* because of [this](https://groups.google.com/forum/?fromgroups#!topic/golang-nuts/dnOK9j5Fvn4). (In short, we can no longer use package names end in .go.)
+**NOTE:** This project was called redis.go and renamed to *goredis* because of [this](https://groups.google.com/forum/?fromgroups#!topic/golang-nuts/dnOK9j5Fvn4). (In short, we can no longer use package names end in .go.)
 
 This package supports the latest release of Go.
 
-redis.go is a client for the [redis](http://github.com/antirez/redis) key-value store. 
+goredis is a client for the [redis](http://github.com/antirez/redis) key-value store. 
 
 Some features include:
 
@@ -76,6 +76,11 @@ Most of the examples connect to a redis database running in the default port -- 
 
 
 More examples coming soon. See `redis_test.go` for more usage examples.
+
+## (Known) Projects using this package
+
+- [uniqush](http://github.com/monnand/uniqush)
+
 
 ## Commands not supported yet
 
