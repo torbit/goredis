@@ -31,16 +31,16 @@ Most of the examples connect to a redis database running in the default port -- 
 ### Instantiating the client
 
     //connects to the default port (6379)
-    var client redis.Client 
+    var client goredis.Client 
      
     //connects to port 8379, database 13
-    var client2 redis.Client
+    var client2 goredis.Client
     client2.Addr = "127.0.0.1:8379"
     client2.Db = 13
 
 ### Strings 
 
-    var client redis.Client
+    var client goredis.Client
     client.Set("a", []byte("hello"))
     val, _ := client.Get("a")
     println(string(val))
@@ -48,7 +48,7 @@ Most of the examples connect to a redis database running in the default port -- 
 
 ### Lists
 
-    var client redis.Client
+    var client goredis.Client
     vals := []string{"a", "b", "c", "d", "e"}
     for _, v := range vals {
         client.Rpush("l", []byte(v))
