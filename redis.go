@@ -32,14 +32,14 @@ func (err RedisError) Error() string { return "Redis Error: " + string(err) }
 
 var doesNotExist = RedisError("Key does not exist ")
 
-func NewClient(poolsize int) (c Client, err Error) {
+func NewClient(poolsize int) (c *Client) {
 	_c := new(Client)
 	MaxPoolSize = poolsize
 	_c.pool = make(chan net.Conn, MaxPoolSize)
 	for i := 0; i < MaxPoolSize; i++ {
 		_c.pool <- nil
 	}
-	return _c, nil
+	return _c
 }
 
 // reads a bulk reply (i.e $5\r\nhello)
