@@ -19,7 +19,7 @@ var MaxPoolSize = 50
 
 var defaultAddr = "127.0.0.1:6379"
 
-var defaultTimeOut time.Duration = 2
+var defaultTimeOut time.Duration = 3 * time.Second
 
 type Client struct {
 	Addr     string
@@ -179,10 +179,10 @@ func (client *Client) openConnection() (c net.Conn, err error) {
 		addr = client.Addr
 	}
 	var timeOut = defaultTimeOut
-	if client.TimeOut != 0 {
+	if client.TimeOut >= 1*time.Second {
 		timeOut = client.TimeOut
 	}
-	c, err = net.DialTimeout("tcp", addr, time.Second*timeOut)
+	c, err = net.DialTimeout("tcp", addr, timeOut)
 	if err != nil {
 		return
 	}
